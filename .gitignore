@@ -1,0 +1,14 @@
+# temp / backup files
+_to_delete/
+*.bak*
+*.new
+
+# White/Blue use only the pre-rendered PNGs in png/ (see index.theme);
+# the old SVG sources are not needed (and crash GTK 4.24's SVG renderer)
+/Tahoe-White/apps/
+/Tahoe-White/places/
+/Tahoe-Blue/apps/
+/Tahoe-Blue/places/
+
+# rebuilt by install.sh
+icon-theme.cache

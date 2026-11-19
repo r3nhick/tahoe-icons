@@ -1,0 +1,26 @@
+[Icon Theme]
+Name=Tahoe Default
+Comment=Tahoe Default: colourful macOS Tahoe icons with WhiteSur folders
+Inherits=MacOS-Like-Dark-AdwFolders
+Example=folder
+
+Directories=apps/scalable,places/16,places/scalable
+
+[places/16]
+Size=16
+Context=Places
+Type=Fixed
+
+[places/scalable]
+Size=64
+Context=Places
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[apps/scalable]
+Size=64
+Context=Applications
+MinSize=8
+MaxSize=512
+Type=Scalable
