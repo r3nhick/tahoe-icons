@@ -5,7 +5,7 @@ Five macOS Tahoe–style icon themes for Linux (GNOME), built from the **MacOS-L
 
 | Theme | Look |
 |---|---|
-| **Tahoe Default** | Colourful macOS Tahoe app icons with WhiteSur folders |
+| **Tahoe Default** | Colourful macOS Tahoe app icons in dark mode — dark tiles, colourful glyphs — with WhiteSur folders |
 | **Tahoe White** | Dark monochrome: dark glass tiles, white glyphs (like macOS Tahoe's dark "tinted" icons) |
 | **Tahoe Blue** | Dark monochrome with slate-blue `#6f8396` glyphs |
 | **Tahoe Red** | Dark monochrome with red `#e62d42` glyphs |
@@ -44,8 +44,9 @@ them all (`install.sh` does). Anything missing falls back to MacTahoe-dark (if i
 
 ## What's inside
 
-- **Tahoe Default** – the full colourful set: ~7,700 app icons plus actions, status, devices, mime types and
-  WhiteSur folders; custom icons for Claude, Discord, Firefox, GitHub, Liner, Motrix, Obsidian, Spotify and Telegram.
+- **Tahoe Default** – the full colourful set in dark mode: every app icon's light or coloured tile replaced by a
+  dark one with the glyph kept in colour (pre-rendered PNG, 16–512 px), plus actions, status, devices, mime types
+  and WhiteSur folders; custom icons for Claude, Discord, Firefox, GitHub, Liner, Motrix, Obsidian, Spotify and Telegram.
 - **Tahoe White / Blue / Red / Green** – ~1,400 app icons plus folders and trash, recoloured to dark monochrome and
   pre-rendered as PNG at 16, 24, 32, 48, 64, 96, 128 and 256 px, so they stay pixel-sharp in the dock and
   don't use SVG filters (which crash GTK 4.24's SVG renderer). All app-id aliases
