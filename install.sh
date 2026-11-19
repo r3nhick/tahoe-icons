@@ -5,10 +5,6 @@ cd "$(dirname "$0")"
 DEST="${HOME}/.icons"
 mkdir -p "$DEST"
 
-for base in MacOS-Like-Dark MacOS-Like-Dark-AdwFolders; do
-  [ -d "$DEST/$base" ] || [ -d "/usr/share/icons/$base" ] || \
-    echo "warning: base theme '$base' not found — Tahoe themes inherit their remaining icons from it" >&2
-done
 
 for theme in Tahoe-Default Tahoe-White Tahoe-Blue; do
   echo "Installing $theme"

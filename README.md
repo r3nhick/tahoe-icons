@@ -35,13 +35,14 @@ Log out and back in (Wayland) so GNOME Shell and the dock pick up the new icons.
 
 ### Requirements
 
-The themes inherit every icon they don't define from **MacOS-Like-Dark** and **MacOS-Like-Dark-AdwFolders**
-(a MacTahoe-based theme). Install those into `~/.icons` as well, otherwise some icons fall back to hicolor/Adwaita.
+Nothing else: **Tahoe Default** is a complete theme (≈12,000 icons: apps, actions, status, devices, mimes,
+places…), and **Tahoe White / Tahoe Blue** take every icon they don't recolour from Tahoe Default — so install
+all three (`install.sh` does). Anything missing falls back to MacTahoe-dark (if installed), Adwaita and hicolor.
 
 ## What's inside
 
-- **Tahoe Default** – app icons and folder icons; custom icons for Claude, Discord, Firefox, GitHub, Liner,
-  Motrix, Obsidian, Spotify and Telegram.
+- **Tahoe Default** – the full colourful set: ~7,700 app icons plus actions, status, devices, mime types and
+  WhiteSur folders; custom icons for Claude, Discord, Firefox, GitHub, Liner, Motrix, Obsidian, Spotify and Telegram.
 - **Tahoe White / Tahoe Blue** – ~1,400 app icons plus folders and trash, recoloured to dark monochrome and
   pre-rendered as PNG at 16, 24, 32, 48, 64, 96, 128 and 256 px, so they stay pixel-sharp in the dock and
   don't use SVG filters (which crash GTK 4.24's SVG renderer). All app-id aliases

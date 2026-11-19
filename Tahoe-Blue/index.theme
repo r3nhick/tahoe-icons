@@ -1,7 +1,7 @@
 [Icon Theme]
 Name=Tahoe Blue
 Comment=Tahoe Blue: dark monochrome macOS Tahoe icons, #6f8396 glyphs
-Inherits=MacOS-Like-Dark-AdwFolders
+Inherits=Tahoe-Default
 Example=folder
 
 Directories=png/apps/16,png/apps/24,png/apps/32,png/apps/48,png/apps/64,png/apps/96,png/apps/128,png/apps/256,png/places/16,png/places/24,png/places/32,png/places/48,png/places/64,png/places/96,png/places/128,png/places/256
