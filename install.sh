@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Installs Tahoe Default / Tahoe White / Tahoe Blue into ~/.icons
+# Installs the Tahoe icon themes (Default, White, Blue, Red, Green) into ~/.icons
 set -euo pipefail
 cd "$(dirname "$0")"
 DEST="${HOME}/.icons"
 mkdir -p "$DEST"
 
 
-for theme in Tahoe-Default Tahoe-White Tahoe-Blue; do
+for theme in Tahoe-Default Tahoe-White Tahoe-Blue Tahoe-Red Tahoe-Green; do
   echo "Installing $theme"
   rm -rf "${DEST:?}/$theme"
   cp -a "$theme" "$DEST/"
