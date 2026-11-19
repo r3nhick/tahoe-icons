@@ -1,6 +1,7 @@
 # Tahoe Icons
 
-Three macOS Tahoe–style icon themes for Linux (GNOME), built on top of MacTahoe / WhiteSur.
+Three macOS Tahoe–style icon themes for Linux (GNOME), built from the **MacOS-Like-Dark** icon theme of
+[xnoviiq/MacOS-26-Gnome](https://github.com/xnoviiq/MacOS-26-Gnome), which is based on MacTahoe / WhiteSur.
 
 | Theme | Look |
 |---|---|
@@ -50,6 +51,10 @@ all three (`install.sh` does). Anything missing falls back to MacTahoe-dark (if 
 
 ## Credits & licence
 
-Based on [MacTahoe](https://github.com/vinceliuice/MacTahoe-icon-theme) and
-[WhiteSur](https://github.com/vinceliuice/WhiteSur-icon-theme) icon themes by Vince Liuice.
-Licensed under the GNU GPL v3 — see [LICENSE](LICENSE).
+- **[xnoviiq/MacOS-26-Gnome](https://github.com/xnoviiq/MacOS-26-Gnome)** by xnoviq — the *MacOS-Like-Dark* icon theme
+  (squircle-wrapped app icons, Dark Launchpad icon) that all three Tahoe themes are made from. MIT licence.
+- **[MacTahoe](https://github.com/vinceliuice/MacTahoe-icon-theme)** and
+  **[WhiteSur](https://github.com/vinceliuice/WhiteSur-icon-theme)** icon themes by Vince Liuice — the original icons
+  and the WhiteSur folders. GNU GPL v3.
+
+Tahoe Icons is distributed under the GNU GPL v3 — see [LICENSE](LICENSE).

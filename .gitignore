@@ -3,8 +3,8 @@ _to_delete/
 *.bak*
 *.new
 
-# White/Blue use only the pre-rendered PNGs in png/ (see index.theme);
-# the old SVG sources are not needed (and crash GTK 4.24's SVG renderer)
+# Tahoe White / Tahoe Blue load only the pre-rendered PNGs in png/ (see their index.theme).
+# apps/ and places/ hold the SVG sources those PNGs were rendered from; the themes don't use them.
 /Tahoe-White/apps/
 /Tahoe-White/places/
 /Tahoe-Blue/apps/
