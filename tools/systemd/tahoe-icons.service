@@ -1,0 +1,9 @@
+[Unit]
+Description=Make Tahoe icons for newly installed apps
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/sleep 8
+ExecStart=%h/.local/bin/tahoe-icons update
+Nice=10

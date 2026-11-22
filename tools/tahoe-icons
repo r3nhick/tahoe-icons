@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+"""tahoe-icons — keeps the Tahoe icon themes complete for the apps installed on this computer.
+
+  tahoe-icons update        make icons for every installed app a Tahoe theme doesn't cover yet
+  tahoe-icons update NAME   (re)make the icon for one icon name, e.g. org.vinegarhq.Sober
+  tahoe-icons list          only show which apps are missing (and in which theme)
+
+An app's own icon (system, Flatpak or user hicolor, pixmaps, any other icon theme) becomes
+  Tahoe Default  the app on Tahoe's dark tile (its old tile darkened, or the icon placed on the tile),
+  All Tahoe colour themes (White, Blue Gray, Blue, ...)  its glyph in the theme colour on the dark tile,
+as crisp PNGs at every size. Icons that already exist in Tahoe Default (hand made ones too) are never replaced:
+only the themes that lack them are filled in from the Default version.
+
+Needs: python-numpy python-pillow librsvg   (sudo pacman -S --needed python-numpy python-pillow librsvg)
+"""
+import os, sys, glob, re
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import numpy as np
+from PIL import Image
+import tahoe_lib as T
+
+HOME = os.path.expanduser('~')
+ICONS = os.path.join(HOME, '.icons')
+MONO = {'Tahoe-White': '#f1f1f4', 'Tahoe-BlueGray': '#6f8396', 'Tahoe-Blue': '#3584e4', 'Tahoe-Turquoise': '#2190a4',
+        'Tahoe-Green': '#3a944a', 'Tahoe-Yellow': '#c88800', 'Tahoe-Orange': '#ed5b00', 'Tahoe-Red': '#e62d42',
+        'Tahoe-Pink': '#d56199', 'Tahoe-Purple': '#9141ac'}
+THEMES = ['Tahoe-Default', *MONO]
+DEFAULT_SIZES = [16, 24, 32, 48, 64, 96, 128, 256, 512]
+MONO_SIZES = [16, 24, 32, 48, 64, 96, 128, 256]
+
+APPDIRS = ['/usr/share/applications', '/usr/local/share/applications',
+           '/var/lib/flatpak/exports/share/applications',
+           f'{HOME}/.local/share/flatpak/exports/share/applications', f'{HOME}/.local/share/applications']
+HICOLOR = ['/var/lib/flatpak/exports/share/icons/hicolor', f'{HOME}/.local/share/flatpak/exports/share/icons/hicolor',
+           f'{HOME}/.local/share/icons/hicolor', '/usr/local/share/icons/hicolor', '/usr/share/icons/hicolor']
+OWN = ('Tahoe-', 'MacTahoe', 'WhiteSur', 'MacOS-Like')   # our own themes are never a source
+
+
+def installed_apps():
+    """{icon name: (app name, Icon=)}; absolute Icon= paths are keyed by the .desktop file name."""
+    apps = {}
+    for d in APPDIRS:
+        for f in sorted(glob.glob(f'{d}/*.desktop')):
+            try:
+                text = open(f, encoding='utf-8', errors='replace').read()
+            except OSError:
+                continue
+            entry = text.split('\n[', 1)[0]
+            if re.search(r'^NoDisplay=true', entry, re.M):
+                continue
+            icon = re.search(r'^Icon=(.+)$', entry, re.M)
+            name = re.search(r'^Name=(.+)$', entry, re.M)
+            if not icon:
+                continue
+            icon = icon.group(1).strip()
+            key = os.path.basename(f)[:-8] if icon.startswith('/') else icon
+            apps.setdefault(key, (name.group(1).strip() if name else key, icon))
+    return apps
+
+
+def themes_here():
+    return [t for t in THEMES if os.path.isdir(f'{ICONS}/{t}/png/apps')]
+
+
+def missing_in(key):
+    """Installed Tahoe themes that have no icon for this name."""
+    return [t for t in themes_here() if not os.path.lexists(f'{ICONS}/{t}/png/apps/64/{key}.png')]
+
+
+def other_themes():
+    out = []
+    for base in ('/usr/share/icons', f'{HOME}/.local/share/icons', f'{HOME}/.icons'):
+        for d in sorted(glob.glob(f'{base}/*/')):
+            if not os.path.basename(d.rstrip('/')).startswith(OWN):
+                out.append(d.rstrip('/'))
+    return out
+
+
+def find_source(icon):
+    if icon.startswith('/'):
+        return icon if os.path.isfile(icon) else None
+    for d in HICOLOR:
+        p = f'{d}/scalable/apps/{icon}.svg'
+        if os.path.isfile(p):
+            return p
+    for s in ['1024x1024', '512x512', '256x256', '192x192', '128x128', '96x96', '64x64', '48x48', '32x32']:
+        for d in HICOLOR:
+            p = f'{d}/{s}/apps/{icon}.png'
+            if os.path.isfile(p):
+                return p
+    for e in ['svg', 'png', 'xpm']:
+        p = f'/usr/share/pixmaps/{icon}.{e}'
+        if os.path.isfile(p):
+            return p
+    for d in other_themes():                      # e.g. an app that only ships its icon inside Adwaita / Papirus
+        for sub in ['scalable/apps', 'apps/scalable', 'apps/512', 'apps/256', 'apps/128', '512x512/apps', '256x256/apps',
+                    '128x128/apps', 'apps/64', '64x64/apps', 'apps/48', '48x48/apps']:
+            for e in ('svg', 'png'):
+                p = f'{d}/{sub}/{icon}.{e}'
+                if os.path.isfile(p):
+                    return p
+    return None
+
+
+def load512(path):
+    if path.endswith('.svg') or path.endswith('.svgz'):
+        svg = open(path, encoding='utf-8', errors='replace').read()
+        return T.rsvg(T.strip_glows(svg))
+    im = Image.open(path).convert('RGBA')
+    w, h = im.size; s = max(w, h)
+    sq = Image.new('RGBA', (s, s)); sq.paste(im, ((s - w) // 2, (s - h) // 2))
+    return np.asarray(sq.resize((T.N, T.N), Image.LANCZOS)).astype(np.float32) / 255
+
+
+def save(rgba, theme, key, sizes):
+    if not os.path.isdir(f'{ICONS}/{theme}/png/apps'):
+        return
+    im = Image.fromarray((np.clip(rgba, 0, 1) * 255).astype(np.uint8), 'RGBA')
+    for s in sizes:
+        d = f'{ICONS}/{theme}/png/apps/{s}'
+        if not os.path.isdir(d):
+            continue
+        dst = f'{d}/{key}.png'
+        tmp = dst + '.tmp'
+        (im if s == T.N else im.resize((s, s), Image.LANCZOS)).save(tmp, 'PNG')
+        os.replace(tmp, dst)                      # replaces an alias link by a real file, never writes through it
+
+
+def fan_out(key, dark, glyph_src, wrapped, only=None):
+    """Writes the mono themes from the dark icon. only: just these themes."""
+    for theme, rgba in T.mono_set(dark, glyph_src, wrapped, MONO).items():
+        if only is None or theme in only:
+            save(rgba, theme, key, MONO_SIZES)
+
+
+def from_default(key, lacking):
+    """The icon already exists in Tahoe Default (a hand-made one, say): fill in the themes that lack it."""
+    for s in (512, 256, 128):
+        p = f'{ICONS}/Tahoe-Default/png/apps/{s}/{key}.png'
+        if os.path.exists(p):
+            dark = np.asarray(Image.open(p).convert('RGBA').resize((T.N, T.N), Image.LANCZOS)).astype(np.float32) / 255
+            fan_out(key, dark, dark, False, only=lacking)
+            return f'filled {", ".join(lacking)} from Tahoe Default'
+    return 'in Tahoe Default but unreadable'
+
+
+def make(key, icon, force=False):
+    lacking = missing_in(key)
+    if not force and lacking and 'Tahoe-Default' not in lacking:
+        return from_default(key, lacking)
+    src = find_source(icon)
+    if not src:
+        return 'no source icon found'
+    try:
+        a = load512(src)
+    except Exception as e:
+        return f'cannot read {src}: {e}'
+    if a is None:
+        return f'cannot render {src}'
+    tiled = (a[..., 3][T.INNER] > 0.9).mean() >= 0.97 or T.normalize(a) is not None
+    if tiled:
+        dark, mode = T.darken(a)
+        if mode == 'free' or T.leftover(dark) > 0.3:
+            dark = T.wrap_free(a); mode = 'wrapped'
+    else:
+        dark, mode = T.wrap_free(a), 'wrapped'
+    save(dark, 'Tahoe-Default', key, DEFAULT_SIZES)
+    fan_out(key, dark, a if mode == 'wrapped' else dark, mode == 'wrapped')
+    return f'{mode} <- {src}'
+
+
+def main():
+    args = sys.argv[1:]
+    cmd = args[0] if args else 'update'
+    if cmd not in ('update', 'list'):
+        sys.exit(__doc__)
+    if not os.path.isdir(f'{ICONS}/Tahoe-Default/png/apps'):
+        sys.exit('Tahoe-Default is not installed in ~/.icons')
+    apps = installed_apps()
+    if cmd == 'update' and len(args) > 1:
+        targets = {k: apps.get(k, (k, k)) for k in args[1:]}
+    else:
+        targets = {k: v for k, v in apps.items() if missing_in(k)}
+    if not targets:
+        print('All installed apps already have Tahoe icons.')
+        return
+    for key, (name, icon) in sorted(targets.items()):
+        if cmd == 'list':
+            print(f'{name}  ({key})  missing in: {", ".join(missing_in(key)) or "-"}')
+            continue
+        print(f'{name}  ({key}): {make(key, icon, force=len(args) > 1)}', flush=True)
+    if cmd == 'update':
+        for t in themes_here():
+            os.utime(f'{ICONS}/{t}', None)       # lets GTK and GNOME Shell notice the new icons
+
+
+if __name__ == '__main__':
+    main()
