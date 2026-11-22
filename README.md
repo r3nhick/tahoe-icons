@@ -1,6 +1,6 @@
 # Tahoe Icons
 
-Eleven macOS Tahoe–style icon themes for Linux (GNOME), built from the **MacOS-Like-Dark** icon theme of
+Twelve macOS Tahoe–style icon themes for Linux (GNOME), built from the **MacOS-Like-Dark** icon theme of
 [xnoviiq/MacOS-26-Gnome](https://github.com/xnoviiq/MacOS-26-Gnome), which is based on MacTahoe / WhiteSur.
 
 | Theme | Look |
@@ -28,9 +28,45 @@ Eleven macOS Tahoe–style icon themes for Linux (GNOME), built from the **MacOS
 
 ![Tahoe White](assets/white.png)
 
+**Tahoe Black**
+
+![Tahoe Black](assets/black.png)
+
 **Tahoe Blue Gray**
 
 ![Tahoe Blue Gray](assets/blue-grey.png)
+
+**Tahoe Blue**
+
+![Tahoe Blue](assets/blue.png)
+
+**Tahoe Turquoise**
+
+![Tahoe Turquoise](assets/turquoise.png)
+
+**Tahoe Green**
+
+![Tahoe Green](assets/green.png)
+
+**Tahoe Yellow**
+
+![Tahoe Yellow](assets/yellow.png)
+
+**Tahoe Orange**
+
+![Tahoe Orange](assets/orange.png)
+
+**Tahoe Red**
+
+![Tahoe Red](assets/red.png)
+
+**Tahoe Pink**
+
+![Tahoe Pink](assets/pink.png)
+
+**Tahoe Purple**
+
+![Tahoe Purple](assets/purple.png)
 
 ## Install
 
